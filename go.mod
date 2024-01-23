@@ -3,6 +3,7 @@ module github.com/lawxen/docker-dev-mysql
 go 1.21.5
 
 require (
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/spf13/cobra v1.8.0
 	sigs.k8s.io/yaml v1.4.0
 )

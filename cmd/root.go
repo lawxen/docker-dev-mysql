@@ -75,7 +75,7 @@ func getFirstContainer() (containerInfo map[string]string) {
 		serviceMap := service.(map[string]interface{})
 		containerInfo["container_name"] = serviceMap["container_name"].(string)
 		containerInfo["container_port"] = serviceMap["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
-		containerInfo["password"] = serviceMap["environment"].(map[string]interface{})["MYSQL_ROOT_PASSWORD"].(string)
+		containerInfo["password"] = serviceMap["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
 		break
 	}
 	return
