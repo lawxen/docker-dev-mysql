@@ -34,7 +34,7 @@ to quickly create a Cobra application.`,
 		}
 		dbName := args[0]
 
-		db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(127.0.0.1:"+containerPort+")/"+dbName)
+		db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(127.0.0.1:"+containerPort+")/")
 		if err != nil {
 			panic(err)
 		}
