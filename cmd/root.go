@@ -6,10 +6,17 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
+	"path/filepath"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
-	"sigs.k8s.io/yaml"
+)
+var (
+	CONTAINER_NAME string
+	MYSQL_EXECUTE_NAME string
+	MYSQL_ROOT_PASSWORD string
+	MYSQL_PORT string
+	DBUSER string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -37,6 +44,18 @@ func Execute() {
 }
 
 func init() {
+	currentPath, _ := os.Getwd()
+	envFile := filepath.Join(currentPath, ".env")
+	if err := godotenv.Load(envFile); err != nil {
+		fmt.Printf("Error loading .env file: %v\n", err)
+		return
+	}
+	CONTAINER_NAME = os.Getenv("CONTAINER_NAME")
+	MYSQL_EXECUTE_NAME = os.Getenv("MYSQL_EXECUTE_NAME")
+	MYSQL_ROOT_PASSWORD = os.Getenv("MYSQL_ROOT_PASSWORD")
+	MYSQL_PORT = os.Getenv("MYSQL_PORT")
+	DBUSER = "root"
+
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
@@ -48,36 +67,36 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func getFirstContainer() (containerInfo map[string]interface{}) {
-	containerInfo = make(map[string]interface{})
-	// get the config info from the execute result of "docker compose config"
-	composeCmd := exec.Command("docker", "compose", "config")
-	config, err := composeCmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Sth wrong:", err)
-		return
-	}
-	// Parse docker compose config
-	var dockerComposeConfig map[string]interface{}
-	err = yaml.Unmarshal(config, &dockerComposeConfig)
-	if err != nil {
-		fmt.Println("Sth wrong:", err)
-		return
-	}
+// func getFirstContainer() (containerInfo map[string]interface{}) {
+// 	containerInfo = make(map[string]interface{})
+// 	// get the config info from the execute result of "docker compose config"
+// 	composeCmd := exec.Command("docker", "compose", "config")
+// 	config, err := composeCmd.CombinedOutput()
+// 	if err != nil {
+// 		fmt.Println("Sth wrong:", err)
+// 		return
+// 	}
+// 	// Parse docker compose config
+// 	var dockerComposeConfig map[string]interface{}
+// 	err = yaml.Unmarshal(config, &dockerComposeConfig)
+// 	if err != nil {
+// 		fmt.Println("Sth wrong:", err)
+// 		return
+// 	}
 
-	services, ok := dockerComposeConfig["services"].(map[string]interface{})
-	if !ok {
-		fmt.Println("Sth wrong: services not found")
-		return
-	}
-	// Just get the first container name and port
-	for _, service := range services {
-		containerInfo = service.(map[string]interface{})
-		// containerInfo["container_name"] = serviceMap["container_name"].(string)
-		// containerInfo["container_port"] = serviceMap["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
-		// containerInfo["password"] = serviceMap["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
-		break
-	}
-	return
+// 	services, ok := dockerComposeConfig["services"].(map[string]interface{})
+// 	if !ok {
+// 		fmt.Println("Sth wrong: services not found")
+// 		return
+// 	}
+// 	// Just get the first container name and port
+// 	for _, service := range services {
+// 		containerInfo = service.(map[string]interface{})
+// 		// containerInfo["container_name"] = serviceMap["container_name"].(string)
+// 		// containerInfo["container_port"] = serviceMap["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
+// 		// containerInfo["password"] = serviceMap["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
+// 		break
+// 	}
+// 	return
 
-}
+// }

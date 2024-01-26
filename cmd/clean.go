@@ -23,10 +23,6 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		containerInfo := getFirstContainer()
-		containerName := containerInfo["container_name"].(string)
-		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
-		dbUser := "root"
 
 		if len(args) != 1 {
 			fmt.Println("Usage: dbback <database_name>")
@@ -35,9 +31,9 @@ to quickly create a Cobra application.`,
 		dbName := args[0]
 
 		// Define SQL statement to drop all tables
-		dropTablesSQL := fmt.Sprintf("mariadb -u%s -p%s -D %s -e 'SHOW TABLES;' | tail -n +2 | xargs -I{} mariadb -u%s -p%s -D %s -e 'DROP TABLE {}'", dbUser, dbPassword, dbName, dbUser, dbPassword, dbName)
+		dropTablesSQL := fmt.Sprintf("%s -u%s -p%s -D %s -e 'SHOW TABLES;' | tail -n +2 | xargs -I{} mariadb -u%s -p%s -D %s -e 'DROP TABLE {}'", MYSQL_EXECUTE_NAME, DBUSER, MYSQL_ROOT_PASSWORD, dbName, DBUSER, MYSQL_ROOT_PASSWORD, dbName)
 
-		finalCmd := exec.Command("docker", "exec", "-i", containerName, "bash", "-c", dropTablesSQL)
+		finalCmd := exec.Command("docker", "exec", "-i", CONTAINER_NAME, "bash", "-c", dropTablesSQL)
 
 		finalCmd.Stdin = os.Stdin
 		finalCmd.Stdout = os.Stdout

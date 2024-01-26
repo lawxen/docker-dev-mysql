@@ -20,16 +20,11 @@ var indbCmd = &cobra.Command{
 	docker-dev indb <db_name>`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		containerInfo := getFirstContainer()
-		containerName := containerInfo["container_name"].(string)
-		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
-		dbUser := "root"
-
-		finalCmd := exec.Command("docker", "exec", "-it", containerName, "mariadb", "-u"+dbUser, "-p"+dbPassword)
+		finalCmd := exec.Command("docker", "exec", "-it", CONTAINER_NAME, MYSQL_EXECUTE_NAME, "-u"+DBUSER, "-p"+MYSQL_ROOT_PASSWORD)
 
 		if len(args) != 0 {
 			dbName := args[0]
-			finalCmd = exec.Command("docker", "exec", "-it", containerName, "mariadb", "-u"+dbUser, "-p"+dbPassword, dbName)
+			finalCmd = exec.Command("docker", "exec", "-it", CONTAINER_NAME, MYSQL_EXECUTE_NAME, "-u"+DBUSER, "-p"+MYSQL_ROOT_PASSWORD, dbName)
 		}
 
 		finalCmd.Stdin = os.Stdin

@@ -24,10 +24,6 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		containerInfo := getFirstContainer()
-		containerName := containerInfo["container_name"].(string)
-		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
-	dbUser := "root"
 
 	if len(args) != 2 {
 		fmt.Println("Usage: dbimport <database_name> <backup_file_path>")
@@ -42,10 +38,10 @@ to quickly create a Cobra application.`,
 		"docker",
 		"exec",
 		"-i",
-		containerName,
-		"mariadb",
-		"-u"+dbUser,
-		"-p"+dbPassword,
+		CONTAINER_NAME,
+		MYSQL_EXECUTE_NAME,
+		"-u"+DBUSER,
+		"-p"+MYSQL_ROOT_PASSWORD,
 		dbName,
 		// "<",
 		// sqlFilePath,

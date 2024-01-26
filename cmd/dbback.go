@@ -26,11 +26,6 @@ to quickly create a Cobra application.`,
 		/** Get parameter from .env **/
 		currentPath, _ := os.Getwd()
 
-		containerInfo := getFirstContainer()
-		containerName := containerInfo["container_name"].(string)
-		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
-		dbUser := "root"
-
 		if len(args) != 1 {
 			fmt.Println("Usage: dbback <database_name>")
 			return
@@ -45,10 +40,10 @@ to quickly create a Cobra application.`,
 		finalCmd := exec.Command(
 			"docker",
 			"exec",
-			containerName,
-			"mariadb-dump",
-			"-u"+dbUser,
-			"-p"+dbPassword,
+			CONTAINER_NAME,
+			MYSQL_EXECUTE_NAME + "-dump",
+			"-u"+DBUSER,
+			"-p"+MYSQL_ROOT_PASSWORD,
 			"--max-allowed-packet=9120M",
 			dbName,
 		)
@@ -68,7 +63,7 @@ to quickly create a Cobra application.`,
 		// Run the command
 		err = finalCmd.Run()
 		if err != nil {
-			fmt.Println("Error running mariadb-dump:", err)
+			fmt.Println("Error running "+MYSQL_EXECUTE_NAME+"-dump:", err)
 			return
 		}
 

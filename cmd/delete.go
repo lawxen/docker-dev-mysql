@@ -23,10 +23,6 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		containerInfo := getFirstContainer()
-		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
-		containerPort := containerInfo["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
-		dbUser := "root"
 
 		if len(args) != 1 {
 			fmt.Println("Usage: delete <database_name>")
@@ -34,7 +30,7 @@ to quickly create a Cobra application.`,
 		}
 		dbName := args[0]
 
-		db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(127.0.0.1:"+containerPort+")/")
+		db, err := sql.Open("mysql", DBUSER+":"+MYSQL_ROOT_PASSWORD+"@tcp(127.0.0.1:"+MYSQL_PORT+")/")
 		if err != nil {
 			panic(err)
 		}
