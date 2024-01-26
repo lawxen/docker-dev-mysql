@@ -1,5 +1,6 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+@todo Use go-mysql-driver/mysql to clean db
 */
 package cmd
 

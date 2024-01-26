@@ -24,7 +24,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		/** Get parameter from .env **/
-		executablePath, _ := os.Executable()
+		currentPath, _ := os.Getwd()
 
 		containerInfo := getFirstContainer()
 		containerName := containerInfo["container_name"].(string)
@@ -40,7 +40,7 @@ to quickly create a Cobra application.`,
 		// Get current time
 		currentTime := time.Now()
 		timeStamp := currentTime.Format("20060102150405")
-		backupFilePath := executablePath + "/db/backup/" + dbName + timeStamp + ".sql"
+		backupFilePath := currentPath + "/db/backup/" + dbName + timeStamp + ".sql"
 
 		finalCmd := exec.Command(
 			"docker",

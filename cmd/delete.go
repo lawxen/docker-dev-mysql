@@ -25,7 +25,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		containerInfo := getFirstContainer()
 		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
-		containerPort := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
+		containerPort := containerInfo["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
 		dbUser := "root"
 
 		if len(args) != 1 {
