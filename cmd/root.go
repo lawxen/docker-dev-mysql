@@ -48,8 +48,42 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func getFirstContainer() (containerInfo map[string]string) {
-	containerInfo = make(map[string]string)
+// func getFirstContainer() (containerInfo map[string]string) {
+// 	containerInfo = make(map[string]string)
+// 	// get the config info from the execute result of "docker compose config"
+// 	composeCmd := exec.Command("docker", "compose", "config")
+// 	config, err := composeCmd.CombinedOutput()
+// 	if err != nil {
+// 		fmt.Println("Sth wrong:", err)
+// 		return
+// 	}
+// 	// Parse docker compose config
+// 	var dockerComposeConfig map[string]interface{}
+// 	err = yaml.Unmarshal(config, &dockerComposeConfig)
+// 	if err != nil {
+// 		fmt.Println("Sth wrong:", err)
+// 		return
+// 	}
+
+// 	services, ok := dockerComposeConfig["services"].(map[string]interface{})
+// 	if !ok {
+// 		fmt.Println("Sth wrong: services not found")
+// 		return
+// 	}
+// 	// Just get the first container name and port
+// 	for _, service := range services {
+// 		serviceMap := service.(map[string]interface{})
+// 		containerInfo["container_name"] = serviceMap["container_name"].(string)
+// 		containerInfo["container_port"] = serviceMap["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
+// 		containerInfo["password"] = serviceMap["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
+// 		break
+// 	}
+// 	return
+
+// }
+
+func getFirstContainer() (containerInfo map[string]interface{}) {
+	containerInfo = make(map[string]interface{})
 	// get the config info from the execute result of "docker compose config"
 	composeCmd := exec.Command("docker", "compose", "config")
 	config, err := composeCmd.CombinedOutput()
@@ -72,10 +106,10 @@ func getFirstContainer() (containerInfo map[string]string) {
 	}
 	// Just get the first container name and port
 	for _, service := range services {
-		serviceMap := service.(map[string]interface{})
-		containerInfo["container_name"] = serviceMap["container_name"].(string)
-		containerInfo["container_port"] = serviceMap["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
-		containerInfo["password"] = serviceMap["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
+		containerInfo = service.(map[string]interface{})
+		// containerInfo["container_name"] = serviceMap["container_name"].(string)
+		// containerInfo["container_port"] = serviceMap["ports"].([]interface{})[0].(map[string]interface{})["published"].(string)
+		// containerInfo["password"] = serviceMap["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
 		break
 	}
 	return

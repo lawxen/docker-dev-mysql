@@ -26,7 +26,7 @@ dm in <container_name>`,
 			containerName = args[0]
 		} else {
 			containerInfo := getFirstContainer()
-			containerName = containerInfo["container_name"]
+			containerName = containerInfo["container_name"].(string)
 		}
 
 		finalCmd := exec.Command("docker", "exec", "-it", containerName, "bash")

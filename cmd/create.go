@@ -25,8 +25,8 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		containerInfo := getFirstContainer()
-		containerPort := containerInfo["container_port"]
-		dbPassword := containerInfo["password"]
+		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
+		containerPort := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
 		dbUser := "root"
 
 		if len(args) != 1 {

@@ -21,8 +21,8 @@ var indbCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		containerInfo := getFirstContainer()
-		containerName := containerInfo["container_name"]
-		dbPassword := containerInfo["password"]
+		containerName := containerInfo["container_name"].(string)
+		dbPassword := containerInfo["environment"].(map[string]interface{})["MARIADB_ROOT_PASSWORD"].(string)
 		dbUser := "root"
 
 		finalCmd := exec.Command("docker", "exec", "-it", containerName, "mariadb", "-u"+dbUser, "-p"+dbPassword)
