@@ -35,7 +35,7 @@ to quickly create a Cobra application.`,
 		// Get current time
 		currentTime := time.Now()
 		timeStamp := currentTime.Format("20060102150405")
-		backupFilePath := currentPath + "/db/backup/" + dbName + timeStamp + ".sql"
+		backupFilePath := currentPath + "/db-backup/" + dbName + timeStamp + ".sql"
 
 		finalCmd := exec.Command(
 			"docker",
